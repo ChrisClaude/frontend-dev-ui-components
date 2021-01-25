@@ -56,6 +56,8 @@ h1 {
   overflow: hidden;
   background-size: cover;
   position: relative;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
 }
 .drop-zone-thumb:hover .overlay {
   opacity: 1;

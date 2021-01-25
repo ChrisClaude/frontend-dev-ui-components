@@ -1,8 +1,4 @@
-// for the cloud icon
-// feather.replace();
-
 const inputElement = document.querySelector('.drop-zone-input');
-
 const dropZone = inputElement.closest('.drop-zone');
 
 dropZone.addEventListener('click', e => {
@@ -14,19 +10,12 @@ inputElement.addEventListener('change', event => {
 });
 
 dropZone.addEventListener('dragover', dragOver);
-dropZone.addEventListener('dragenter', dragEnter);
 dropZone.addEventListener('dragleave', dragLeave);
 dropZone.addEventListener('drop', drop);
 
 function dragOver(event) {
   event.preventDefault();
   console.log('drag over');
-  this.className += ' outline';
-}
-
-function dragEnter(event) {
-  event.preventDefault();
-  console.log('drag enter');
   this.className += ' outline';
 }
 
@@ -40,7 +29,6 @@ function drop(event) {
 
   if (event.dataTransfer.files.length) {
     inputElement.files = event.dataTransfer.files;
-
     updateThumbnail(dropZone, event.dataTransfer.files[0]);
   }
 
@@ -62,26 +50,28 @@ function updateThumbnail(dropZoneElement, file) {
     initialPromptText.remove();
   }
 
-  // get the file extension
+  // get the file extension - with the first letter capitalized
   let fileExtension = file.name.split('.').pop();
   fileExtension =
     fileExtension.charAt(0).toUpperCase() + fileExtension.slice(1);
 
   // First time - there is no thumbnail element, so lets create it
   if (!thumbnailElement) {
-    thumbnailElement = document.createElement('div');
-    thumbnailElement.classList.add('drop-zone-thumb');
+    thumbnailElement = createHtmlElementWithClassName('div', 'drop-zone-thumb');
 
-    const overlayElement = document.createElement('div');
-    overlayElement.classList.add('overlay');
+    const overlayElement = createHtmlElementWithClassName('div', 'overlay');
 
-    const overlayFileNameElement = document.createElement('p');
-    overlayFileNameElement.className = 'thumbnail-file-name';
+    const overlayFileNameElement = createHtmlElementWithClassName(
+      'p',
+      'thumbnail-file-name',
+    );
     overlayFileNameElement.textContent = file.name;
 
-    const overlayPromptTextElement = document.createElement('p');
+    const overlayPromptTextElement = createHtmlElementWithClassName(
+      'p',
+      'overlay-prompt-text',
+    );
     overlayPromptTextElement.textContent = 'Drag and drop or click to replace';
-    overlayPromptTextElement.className = 'overlay-prompt-text';
 
     const removeFileButton = document.createElement('button');
 
@@ -91,8 +81,7 @@ function updateThumbnail(dropZoneElement, file) {
       e.stopPropagation();
     });
 
-    const removeIcon = document.createElement('i');
-    removeIcon.className = 'fas fa-trash-alt';
+    const removeIcon = createHtmlElementWithClassName('i', 'fas fa-trash-alt');
     removeFileButton.append(removeIcon);
     removeFileButton.append(document.createTextNode('REMOVE'));
 
@@ -106,7 +95,7 @@ function updateThumbnail(dropZoneElement, file) {
     dropZoneElement.appendChild(thumbnailElement);
   } else {
     const overlayPromptTextElement = document.querySelector(
-      '.thumbnail-file-name'
+      '.thumbnail-file-name',
     );
     overlayPromptTextElement.textContent = file.name;
   }
@@ -149,4 +138,16 @@ function updateThumbnail(dropZoneElement, file) {
       document.querySelector('.doc-extension').textContent = fileExtension;
     }
   }
+}
+
+/**
+ *
+ * @param {String} elementName this the element that is created in the DOM
+ * @param {String} className this is the class or classes that are added to the created element
+ * @returns {HTMLElement} html element with the specified classes
+ */
+function createHtmlElementWithClassName(elementName, className) {
+  const htmlElement = document.createElement(elementName);
+  htmlElement.className = className;
+  return htmlElement;
 }
